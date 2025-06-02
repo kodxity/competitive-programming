@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build and Run Active C++ File",
+        "type": "shell",
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-Command"]
+        },
+        "command": "$src = '${file}'; $exe = 'C:\\Users\\MY PC\\Downloads\\Computing\\Competitive Programming\\run.exe'; $in = 'C:\\Users\\MY PC\\Downloads\\Computing\\Competitive Programming\\input.txt'; $out = 'C:\\Users\\MY PC\\Downloads\\Computing\\Competitive Programming\\output.txt'; g++ -std=c++17 -o \"$exe\" \"$src\"; Get-Content \"$in\" | & \"$exe\" | Set-Content \"$out\"",
+        "problemMatcher": ["$gcc"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
+  
