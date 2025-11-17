@@ -8,15 +8,20 @@ typedef pair<int,int> pi;
 const int MOD = 1e9+7;
 void solve(){   
 
-    cout<<"I see two ps\n";
+    cout<<"Hello World\n";
  
 }
+
+
 int main(){
 
 
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
+
 	int t=1; 
  
     cin>>t;
@@ -25,4 +30,4 @@ int main(){
     }
 
     return 0;
-}; 
+}
