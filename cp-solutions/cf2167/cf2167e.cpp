@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -58,31 +57,69 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
-    vl v(n);
+    int n,k,x;
+    cin>>n>>k>>x;
+    vi v(n);
     rep(i,0,n){
         cin>>v[i];
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
-            }
+    sort(all(v));
+    int lo = -1;
+    int hi = x;
+    
+    while(lo < hi){
+        int mid = lo + (hi-lo+1)/2;
+        ll ans = 0;
+        ans += max(0, v[0]-mid+1);
+        ans += max(0, x-v[n-1]-mid+1);
+        rep(i,0,n-1){
+            ans += max(0, v[i+1]-mid - (v[i]+mid) + 1);
+        } 
+        if(ans >= k){
+            lo = mid; 
         }
-        if(good){
-            cout<<i<<nl;
-            return;
+        else{
+            hi = mid-1;
         }
     }
+    if(lo==0){
+        rep(i,0,k){
+            cout<<i<<" ";
+        }
+        cout<<nl;
+        return;
+    }
+    rep(i,0,v[0]-lo+1){
+        if(k == 0){
+            break;
+        }
+        cout<<i<<" ";
+        k--;
+    }
 
-    cout<<-1<<nl;
+    repv(i,v[n-1]+lo,x+1){
+        if(k==0){
+            break;
+        }
+        cout<<i<<" ";
+        k--;
+    }
+
+    rep(i,0,n-1){
+        rep(j,v[i]+lo,v[i+1]-lo+1){
+            if(k==0){
+                break;
+            }
+            cout<<j<<" ";
+            k--;
+        }
+    }
+    cout<<nl;
+
+    
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

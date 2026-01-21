@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -58,31 +57,51 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
-    vl v(n);
+    int m,q; cin>>m>>q;
+    int n = 1;
+    rep(i,0,m){
+        n *= 2;
+    }
+    vi a(n);
     rep(i,0,n){
-        cin>>v[i];
+        cin>>a[i];
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+    int pre[n+1]={0};
+    rep(i,0,n){
+        pre[i+1] = (a[i] ^ pre[i]);
+    }
+    while(q--){
+        int b,c;
+        cin>>b>>c;
+        int l = b;
+        int r = b;
+        int sz = 1;
+        int val = c;
+        int ans = 0;
+        b--;
+        while(r-l+1 < n){
+            if(b%2==0){
+                if((pre[r+sz]^pre[r]) > val){
+                    ans += sz;
+                }
+                val ^= pre[r+sz]^pre[r];
+                r+=sz;
             }
+            else{
+                if((pre[l-1]^pre[l-sz-1]) >= val){
+                    ans += sz;
+                }
+                val ^= pre[l-1]^pre[l-sz-1];
+                l-=sz;
+            }
+            sz *= 2;
+            b/=2;
+
         }
-        if(good){
-            cout<<i<<nl;
-            return;
-        }
+        cout<<ans<<nl;
     }
-
-    cout<<-1<<nl;
-
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

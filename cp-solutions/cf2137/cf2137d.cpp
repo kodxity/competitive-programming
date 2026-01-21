@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -59,30 +58,39 @@ const ll INF = (1LL<<60);
 
 void solve() {
     int n;cin>>n;
-    vl v(n);
+    vi v(n);
     rep(i,0,n){
         cin>>v[i];
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+    vi cnt[n+1];
+    rep(i,0,n){
+        cnt[v[i]].pb(i);
+    }
+    int ans[n];
+    int val = 1;
+    int md = 0;
+    rep(i,1,n+1){
+        if(sz(cnt[i])%i==0){
+            trav(x, cnt[i]){
+                ans[x] = val;
+                md++; md %= i;
+                if(md == 0){
+                    val++;
+                }
             }
         }
-        if(good){
-            cout<<i<<nl;
+        else{
+            cout<<-1<<nl;
             return;
         }
     }
-
-    cout<<-1<<nl;
-
+    
+    rep(i,0,n){
+        cout<<ans[i]<<" ";
+    }
+    cout<<nl;
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

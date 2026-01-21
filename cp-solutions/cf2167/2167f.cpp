@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -56,33 +55,50 @@ const ll INF = (1LL<<60);
 
 */
 
-
-void solve() {
-    int n;cin>>n;
-    vl v(n);
-    rep(i,0,n){
-        cin>>v[i];
-    }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+int vis[200005];
+vi aj[200005];
+ll dp[200005];
+ll ans = 0;
+void dfs(int n, int tot,  int k){
+    dp[n]=1;
+    vis[n]=1;
+    trav(x, aj[n]){
+        if(!vis[x]){
+            dfs(x,tot,k);
+            dp[n] += dp[x];
+            if(tot-dp[x] < k){
+                ans += dp[x];
             }
         }
-        if(good){
-            cout<<i<<nl;
-            return;
-        }
     }
-
-    cout<<-1<<nl;
+    if(dp[n] < k){
+        ans += tot-dp[n];
+    }
 
 }
 
 
+void solve() {
+    ll n,k;
+    cin>>n>>k;
+    ans = 0;
+    rep(i,0,n){
+        vis[i] = 0;
+        aj[i].clear();
+        dp[i] = 0;
+    }
+    rep(i,0,n-1){
+        int x,y;
+        cin>>x>>y;
+        x--;y--;
+        aj[x].pb(y);
+        aj[y].pb(x);
+    }
+
+    dfs(0,n,k);
+    cout<<n*n-ans<<nl;
+}
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

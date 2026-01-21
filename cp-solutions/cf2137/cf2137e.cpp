@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -58,31 +57,55 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
+    ll n,k;cin>>n>>k;
     vl v(n);
+    ll cnt[n]={0};
     rep(i,0,n){
         cin>>v[i];
+        if(v[i] < n){
+            cnt[v[i]]++;
+        }
     }
 
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+    ll val = n;
+    ll x = n;
+    rep(i,0,n){
+        if(cnt[i] == 0){
+            val = i;
+            break;
+        }
+    }
+
+    rep(i,0,n){
+        if(cnt[i] != 1){
+            x = i;
+            break;
+        }
+    }
+    ll val2 = 0;
+    ll sum = 0;
+    rep(i,0,n){
+        if(cnt[i]==1){
+            val2++;
+            if(i < val){
+                sum+=i;
             }
         }
-        if(good){
-            cout<<i<<nl;
-            return;
-        }
     }
-
-    cout<<-1<<nl;
-
+    if(k==1){
+        cout<<(n-val2)*val + sum<<nl;
+        return;
+    }
+    if(val != x) k--;
+    
+    if(k%2==1 || n-x == 1){
+        cout<<(n-x)*x + (x*(x-1))/2<<nl;
+    }
+    else{
+        cout<<(n-x)*(x+1) + (x*(x-1))/2<<nl;
+    }
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

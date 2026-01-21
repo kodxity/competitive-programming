@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -58,37 +57,68 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
-    vl v(n);
-    rep(i,0,n){
-        cin>>v[i];
+    int n,m;
+    cin>>n>>m;
+    int s[n], d[n], c[n];
+    vi a[n];
+    int exam[n]={0};
+    rep(i,0,m){
+        cin>>s[i]>>d[i]>>c[i]; 
+        s[i]--;
+        d[i]--;
+        a[s[i]].pb(i);
+        exam[d[i]] = 1;
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+    pqg<pi> pq;
+    int ans[n];
+    rep(i,0,n){
+        ans[i] = -1;
+        trav(x, a[i]){
+            pq.push({d[x]-c[x], x});
+        }
+        if(exam[i]){
+            ans[i] = m;
+        }
+        else{
+            if(sz(pq)){
+                pi x = pq.top();
+                pq.pop();
+                ans[i] = x.s;
+                if(x.f+1 < d[x.s]){
+                    pq.push({x.f+1,x.s});
+                }
             }
         }
-        if(good){
-            cout<<i<<nl;
+    }
+    rep(i,0,m){
+        int cnt = 0;
+        rep(j,s[i],d[i]){
+            if(ans[j] == i){
+                cnt++;
+            }
+                
+        }
+        if(cnt != c[i]){
+            cout<<-1<<nl;
             return;
         }
     }
 
-    cout<<-1<<nl;
+    rep(i,0,n){
+        cout<<ans[i]+1<<" ";
+    }
+    cout<<nl;
+    
+    
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while(T--) {
         solve();
     }

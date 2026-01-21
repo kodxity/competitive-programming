@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -56,36 +55,51 @@ const ll INF = (1LL<<60);
 
 */
 
+vi prime; 
+int ispr[20000005]={0};
+void sieve(int n){
+	int v[n+1]={0};
+	rep(k,2,n+1){
+		if(v[k]){ 
+		// we have already visited this previously, so its not prime
+			continue;
+		}
+			/*
+			We havent visited k, meaning it is not a multiple
+			of ANY smaller primt weve visited before. Thus it 
+			must be prime. Thus we will visit all multiples of k.
+			*/
+		for(int x = 2*k;x<=n;x+=k){ 
+			v[x]=k;
+		}
+	}
+	rep(i,2,n+1){
+		if(v[i] == 0){
+			prime.pb(i);
+            ispr[i] = 1;
+		}
+	}
+}
 
 void solve() {
     int n;cin>>n;
-    vl v(n);
-    rep(i,0,n){
-        cin>>v[i];
-    }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
-            }
-        }
-        if(good){
-            cout<<i<<nl;
-            return;
+    
+    ll ans = 0;
+    rep(i,1,n+1){
+        if(ispr[i]){
+            ans += n/i;
         }
     }
 
-    cout<<-1<<nl;
+    cout<<ans<<nl;
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);
+    
+    sieve(1e7+5);
 
     int T = 1;
     cin >> T;

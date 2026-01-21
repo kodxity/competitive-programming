@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -56,33 +55,56 @@ const ll INF = (1LL<<60);
 
 */
 
+int dp[200005][3];
 
-void solve() {
-    int n;cin>>n;
-    vl v(n);
-    rep(i,0,n){
-        cin>>v[i];
+vi aj[200005];
+int vis[200005];
+
+void dfs(int n){
+    vis[n] = 1;
+    if(sz(aj[n])>1 || n == 0){
+        dp[n][0]=1;           
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+    trav(x, aj[n]){
+        if(!vis[x]){
+            dfs(x);
+            int dp2[3]={0};
+            rep(j,0,3){
+                rep(l,0,3){
+                    dp2[(j+l)%3] |= (dp[n][j] & dp[x][l]);
+                }
+            }
+            rep(j,0,3){
+                dp[n][j] = dp2[j];
             }
         }
-        if(good){
-            cout<<i<<nl;
-            return;
+
+    }
+    dp[n][1] = 1;
+}
+void solve() {
+    int n;cin>>n;
+    rep(i,0,n+1){
+        rep(j,0,3){
+            dp[i][j]=0;
         }
+        aj[i].clear();
+        vis[i] = 0;
     }
 
-    cout<<-1<<nl;
+    rep(i,0,n-1){
+        int x,y;
+        cin>>x>>y;
+        x--;y--;
+        aj[x].pb(y);
+        aj[y].pb(x);
+        
+    }
+    dfs(0);
+    cout<<((dp[0][0]) ? "YES" : "NO")<<nl;
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

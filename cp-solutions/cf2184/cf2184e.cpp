@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -50,6 +49,42 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
+class DSU{
+    private:
+        vector<int>parents;
+        vector<int> sizes;
+    public:
+	    // DSU dsu(n);
+        DSU(int size): parents(size),sizes(size,1){
+            for(int i = 0;i<size;i++){
+                parents[i]=i;
+            }
+        }
+
+        int getsize(int x){
+            return sizes[find(x)];
+        }
+
+        int find(int x){
+            return parents[x] == x ? x : (parents[x] = find(parents[x])); 
+        }
+
+        bool unite(int x, int y){
+            int xr = find(x);
+            int yr = find(y);
+            if (xr == yr){
+                return false;
+            }
+
+            if(sizes[xr] < sizes[yr]){
+                swap(xr,yr);
+            }
+            sizes[xr] += sizes[yr];
+            parents[yr]=xr;
+            return true;
+        }
+};
+
 
 /*
 
@@ -59,30 +94,37 @@ const ll INF = (1LL<<60);
 
 void solve() {
     int n;cin>>n;
-    vl v(n);
+    vi v(n);
     rep(i,0,n){
         cin>>v[i];
     }
 
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
-            }
-        }
-        if(good){
-            cout<<i<<nl;
-            return;
-        }
+    vpi edge[n];
+    rep(i,0,n-1){
+        edge[abs(v[i]-v[i+1])].pb({i,i+1});
     }
 
-    cout<<-1<<nl;
+    ll ans[n+1]={0};
+    DSU dsu(n); 
+    repv(i,1,n){
+        ans[i] = ans[i+1];
+        trav(x, edge[i]){
+            ll xsz = dsu.getsize(x.f);
+            ll ysz = dsu.getsize(x.s);
+            ans[i] -= xsz * (xsz-1) + ysz * (ysz-1);
+            dsu.unite(x.f,x.s);
+            ans[i] += (xsz+ysz) * (xsz+ysz-1);
+        }
 
+    }
+    
+    rep(i,1,n){
+        cout<<ans[i]/2<<" ";
+    }
+
+    cout<<nl;
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

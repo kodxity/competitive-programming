@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -58,31 +57,64 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
+    
+    int n,m;
+    cin>>n>>m;
+    
     vl v(n);
     rep(i,0,n){
         cin>>v[i];
     }
 
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
-            }
-        }
-        if(good){
-            cout<<i<<nl;
-            return;
-        }
-    }
+    vpl aj[n+1];
+    rep(i,0,m){
+        ll s,t,w;
+        cin>>s>>t>>w;
+        aj[s].pb({t,w});
 
-    cout<<-1<<nl;
+    }
+    
+
+    ll lo = 0;
+    ll hi = 1e18;
+    
+
+    while(lo < hi){
+        ll mid = lo + (hi-lo)/2;
+        
+        ll dp[n+1]={0};
+    
+        rep(i,2,n+1){
+            dp[i] = -1;
+        }
+        rep(i,1,n+1){
+            if(dp[i] == -1) continue;
+            dp[i] = min(mid, dp[i] + v[i-1]);
+            trav(x, aj[i]){
+                if(x.s <= dp[i]){
+                    dp[x.f] = max(dp[x.f],dp[i]);
+                }
+            }
+
+        }
+        if(dp[n]==-1){
+            lo = mid+1;
+        }
+        else{
+            hi = mid;
+        }
+
+
+    }
+    if(hi == 1e18){
+        cout<<-1<<nl;
+        return;
+    }
+    cout<<hi<<nl;
+    
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

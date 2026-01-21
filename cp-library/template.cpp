@@ -66,7 +66,7 @@ int main() {
     cin.exceptions(cin.failbit);
 
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while(T--) {
         solve();
     }

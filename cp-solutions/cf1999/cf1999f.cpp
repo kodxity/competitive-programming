@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -50,6 +49,67 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
+ll add(ll x, ll y)
+{
+    x += y;
+    while(x >= MOD) x -= MOD;
+    while(x < 0) x += MOD;
+    return x;
+}
+
+ll mult(ll x, ll y){
+    x %= MOD;
+    y %= MOD;
+    return (x*y) % MOD;
+}
+ll lpow(ll x, ll y)
+{
+    if(y <= 0){
+        return 1;
+    }
+    ll z = 1;
+    while(y)
+    {
+        if(y & 1) z = mult(z, x);
+        x = mult(x, x);
+        y >>= 1;
+    }
+    return z;
+}
+
+ll inv(ll x) {
+    return lpow(x, MOD - 2);
+}
+
+ll divide(ll x, ll y)
+{
+    return mult(x, inv(y));
+}
+
+ll qexp(ll a, ll b, ll m) {
+    ll res = 1;
+    while (b) {
+        if (b % 2) res = res * a % m;
+        a = a * a % m;
+        b /= 2;
+    }
+    return res;
+}
+
+vector<ll> fact, invf;
+
+void precompute(int n) {
+    fact.assign(n + 1, 1);
+    for (int i = 1; i <= n; i++) fact[i] = fact[i - 1] * i % MOD;
+    invf.assign(n + 1, 1);
+    invf[n] = qexp(fact[n], MOD - 2, MOD);
+    for (int i = n - 1; i > 0; i--) invf[i] = invf[i + 1] * (i + 1) % MOD;
+}
+
+ll nCk(ll n,ll k) {
+    if (k < 0 || k > n) return 0;
+    return fact[n] * invf[k] % MOD * invf[n - k] % MOD;
+}
 
 /*
 
@@ -58,35 +118,28 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
-    vl v(n);
+    int n,k; cin>>n>>k;
+    int a = 0;
+    int b = 0;
     rep(i,0,n){
-        cin>>v[i];
+        int u;cin>>u;
+        if(u==0) a++;
+        if(u==1) b++;
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
-            }
-        }
-        if(good){
-            cout<<i<<nl;
-            return;
+    ll ans = 0;
+    rep(i,0,k/2+1){
+        if(i <= a && k-i <= b){
+            ans = add(ans, mult(nCk(a,i), nCk(b,k-i))); 
         }
     }
-
-    cout<<-1<<nl;
-
+    cout<<ans<<nl;
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);
-
+    
+    precompute(200005);
     int T = 1;
     cin >> T;
     while(T--) {

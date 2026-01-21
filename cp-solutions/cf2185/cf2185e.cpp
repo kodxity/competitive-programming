@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -58,31 +57,78 @@ const ll INF = (1LL<<60);
 
 
 void solve() {
-    int n;cin>>n;
-    vl v(n);
+    int n,m,k;cin>>n>>m>>k;
+    vi a(n);
+    vi b(m);
     rep(i,0,n){
-        cin>>v[i];
+        cin>>a[i];
     }
+    rep(i,0,m){
+        cin>>b[i];
+    }
+    sort(all(a));
+    sort(all(b));
+    vpi v;
+    vi l[k+1];
+    vi r[k+1];
+    int vis[n] = {0};
+    rep(i,0,n){
+        int cntl = 1e9;
+        int cntr = 1e9;
+        auto itr = ub(all(b),a[i]);
+        if(itr != b.end()){
+            cntr = *itr-a[i];
+        }
+        if(itr != b.begin()){
+            --itr;
+            cntl = a[i] - *itr;
+        }
+        v.pb({cntl,cntr});
+        if(cntl <= k){
+            l[cntl].pb(i);
+        }
+        if(cntr <= k){
+            r[cntr].pb(i);
+        }
+    }
+    string s;cin>>s;
+    int cnt = 0;
+    int ans = n;
+    rep(i,0,k){
+        if(s[i] == 'L'){
+            cnt--;
+        }
+        else{
+            cnt++;
+        }
 
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
+        if(cnt < 0){
+            int val = -cnt;
+            while(sz(l[val])){
+                if(!vis[l[val].back()]){
+                    vis[l[val].back()] = 1;
+                    ans--;
+                }
+                l[val].pop_back();
             }
         }
-        if(good){
-            cout<<i<<nl;
-            return;
+        else{
+            int val = cnt;
+            while(sz(r[val])){
+                if(!vis[r[val].back()]){
+                    vis[r[val].back()] = 1;
+                    ans--;
+                }
+                r[val].pop_back();
+            }
         }
+        cout<<ans<<" ";
     }
-
-    cout<<-1<<nl;
+    cout<<nl;
+        
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

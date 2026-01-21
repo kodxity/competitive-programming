@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -59,30 +58,65 @@ const ll INF = (1LL<<60);
 
 void solve() {
     int n;cin>>n;
-    vl v(n);
+    pqg<pi>pq;
+    vi v[n];
+    int k = 0;
     rep(i,0,n){
-        cin>>v[i];
+        int m;cin>>m;
+        ckmax(k,m);
+        rep(j,0,m){
+            int u;cin>>u;
+            v[i].pb(u);
+        }
+        pq.push({v[i][0],i});    
     }
 
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
+    int ans[k];
+
+    rep(i,0,k){
+        if(!sz(pq)){
+            rep(j,0,n){
+                if(i < sz(v[j])){
+                    pq.push({v[j][i],j});
+                }
+            }
+            if(!sz(pq)){
                 break;
             }
         }
-        if(good){
-            cout<<i<<nl;
-            return;
+
+        int mn = pq.top().f;
+        ans[i] = mn;
+        pqg<pi>pq2;
+        int next = 0;
+        while(sz(pq)){
+            if(pq.top().f == mn){
+                if(i+1>=sz(v[pq.top().s])){
+                    next = 1;
+                }
+                else{
+                    pq2.push({v[pq.top().s][i+1],pq.top().s});
+                }
+                pq.pop();
+            }
+            else{
+                pq.pop();
+            }
         }
+        if(next){
+            continue;
+        }
+        pq = pq2;
     }
 
-    cout<<-1<<nl;
+    rep(i,0,k){
+        cout<<ans[i]<<" ";
+    }
+    
+    cout<<nl;
 
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

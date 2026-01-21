@@ -1,5 +1,5 @@
 // what's another death?
-// send the ocean my apologies
+// someday ill get it :>
 
 #include <bits/stdc++.h>
  
@@ -12,7 +12,6 @@ typedef complex<ld> cd;
 typedef pair<int, int> pi;
 typedef pair<ll,ll> pl;
 typedef pair<ld,ld> pd;
-
 
 typedef vector<int> vi;
 typedef vector<ld> vd;
@@ -52,37 +51,55 @@ const ll INF = (1LL<<60);
 
 
 /*
+Assume we currently have two numbers we are considering x and x+1. Then, look
+at the split after. If x be even, then x is split into x/2 and x/2, and 
+x+1 is split into x/2 and x/2+1. Similarly if x is odd, then x is split into (x-1)/2
+and (x+1)/2 and x+1 is split into (x+1)/2 and (x+1)/2. We can see given two possible
+numbers on the ith move, there are at most 2 possible numbers we can obtain on the i+1th
+move.
 
+We start with one number n. If n is even it splits into n/2 and n/2. If n is odd, then
+it's split into n/2 and n/2+1. 
+
+Since for base case we have at most two numbers, and each transition result gives us at 
+most two numbers, we can see that for each step there are at most two numbers. Thus, we 
+can just keep track of them and compare to k each time.
 
 */
 
 
 void solve() {
-    int n;cin>>n;
-    vl v(n);
-    rep(i,0,n){
-        cin>>v[i];
+    ll n,k;
+    cin>>n>>k;
+    if(n==k){
+        cout<<0<<nl;
+        return;
     }
-
-    rep(i,2,1001){
-        int good = 0;
-        rep(j,0,n){
-            if(gcd(v[j],i) == 1){
-                good = 1;
-                break;
-            }
-        }
-        if(good){
-            cout<<i<<nl;
+    else if(n < k){
+        cout<<-1<<nl;
+        return;
+    }
+    int a = n/2;
+    int b = (n+1)/2;
+    int ans = 1;
+    
+    while(a != 0){
+        if(a == k || b == k){
+            cout<<ans<<nl;
             return;
         }
+        a = a/2; // min possible value
+        b = b/2 + b%2; // max possible value
+        ans++;
     }
 
     cout<<-1<<nl;
 
+
+     
+
 }
-
-
+ 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);
