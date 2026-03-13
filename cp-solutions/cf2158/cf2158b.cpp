@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -89,44 +88,33 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 void solve() {
     int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
-    rep(i,0,n){
+    vi v(2*n);
+    set<int>st;
+    rep(i,0,2*n){
         cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
-        }
+        st.insert(v[i]);
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
+    int cnt[2*n+1]={0}; 
+
+    rep(i,0,2*n){
+        cnt[v[i]]++;
+    }
+    int ans = 0;
+    int val = 0; 
+    int cnt1 = 0;
+    for(auto it = st.begin();it != st.end();it++){
+        if(cnt[*it]%2){
+            ans++;
+            cnt1++;
+        }
+        else{
+            if(cnt[*it]%4==0){
+                val++;
             }
+            ans += 2;
         }
-        cout<<"YES\n";
     }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
-        }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
-    }
+    cout<<ans-2*(val%2 && cnt1 < 2)<<nl;
 }
  
 int main() {

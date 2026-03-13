@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -82,51 +81,72 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 
 /*
-
-
+It will always be continuous no matter what. For example, for all ?, the optimal answer is always 000...111... or 111...000...
+Anything else will worsen the answer (will increase the probabiltiy of a worse answer). If x < y, we mostly want 01. Thus, our
+final configuration must be 000...111.... If x > y, we want 10, so it will be 111...000....
+Thus, we can now fix the number of 0s and 1s, and our task turns into calculating the cost in O(1).
+For each position ?, we calculate the cost if a 0 or a 1 is placed on it. This is simple since we just find the number of 0/1s to 
+its left and 0/1s to its right. We can then create a prefix sum of this for fast querying, where pre[0/1][l..r] = the sum of cost
+if all positions [l...r] is placed with 0/1. Then, we just go through each possible number of cnt[0] and calculate the total cost
+in O(1). WLOG let x < y, then we prioritize 01. Then, answer is max(for(i,total?)(pre[0][1...cnt[0]] + pre[1][cnt[0]+1...total?])).
 */
 
 
 void solve() {
-    int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
+    string s;cin>>s;
+    int n = sz(s);
+    ll x,y;
+    cin>>x>>y;
+    ll pre0[n+1]={0};
+    ll pre1[n+1]={0};
+    int tot = 0;
+    vi v;
     rep(i,0,n){
-        cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
+        pre0[i+1] = pre0[i];
+        pre1[i+1] = pre1[i];
+
+        if(s[i] == '0'){
+            pre0[i+1]++;
         }
-        else if(v[i] > 0){
-            a[1]++;
+        else if(s[i] == '1'){
+            pre1[i+1]++;
+        }
+        else if(s[i] == '?'){
+            tot++; 
+            v.pb(i);
         }
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
-            }
+    
+    ll pre[2][tot+1];
+    memset(pre,0,sizeof(pre));
+    ll ans = 1e18;
+    ll sum = 0;
+    rep(i,0,n){
+        if(s[i] == '0'){
+            sum += (pre1[i+1])*y + (pre1[n]-pre1[i+1])*x;
         }
-        cout<<"YES\n";
+        else if(s[i] == '1'){
+            sum += (pre0[i+1])*x + (pre0[n]-pre0[i+1])*y;
+        }
     }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
-        }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
+    sum/=2;
+    rep(i,0,sz(v)){
+        pre[0][i+1] = pre[0][i] + (pre1[v[i]+1])*y + (pre1[n]-pre1[v[i]+1])*x;
+        pre[1][i+1] = pre[1][i] + (pre0[v[i]+1])*x + (pre0[n]-pre0[v[i]+1])*y;
     }
+
+    if(x<y){ // 01
+        rep(i,0,sz(v)+1){
+            ckmin(ans, sum + pre[0][i] + (pre[1][sz(v)]-pre[1][i]) + (i*(sz(v)-i))*x);
+        }
+    }
+    else{ // 10
+        rep(i,0,sz(v)+1){
+            ckmin(ans, sum + pre[1][i] + (pre[0][sz(v)]-pre[0][i]) + (i*(sz(v)-i))*y);
+        }
+    }
+    cout<<ans<<nl;
+    
 }
  
 int main() {
@@ -134,7 +154,7 @@ int main() {
     cin.exceptions(cin.failbit);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while(T--) {
         solve();
     }

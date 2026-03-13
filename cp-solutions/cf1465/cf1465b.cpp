@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -82,51 +81,36 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 
 /*
-
+A number must appear every lcm(1,2,...,9) = ~3000, so mod 3000. There are 10^3 cases, so 3*10^6 which should pass
+by brute force.
 
 */
 
+bool check(ll n){
+    ll val = n;
+    bool good = 1;
+    while(val){
+        int x = val%10;
+        if(x != 0 && n%x){
+            good = 0;
+            break;
+        }
+        val/=10;
+    }
+    return good;
+     
+}
 
 void solve() {
-    int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
-    rep(i,0,n){
-        cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
-        }
-    }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
-            }
-        }
-        cout<<"YES\n";
-    }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
+    ll n;cin>>n;
+    while(true){
+        if(check(n)){
+            cout<<n<<nl;
             return;
         }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
+        n++;
     }
+
 }
  
 int main() {

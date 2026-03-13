@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -89,44 +88,13 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 void solve() {
     int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
+    string s;cin>>s;
+    set<char>st;
     rep(i,0,n){
-        cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
-        }
+        st.insert(s[i]);
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
-            }
-        }
-        cout<<"YES\n";
-    }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
-        }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
-    }
+    cout<<((sz(st) == n && n>1) ? "NO" : "YES")<<nl;
+
 }
  
 int main() {
@@ -134,7 +102,7 @@ int main() {
     cin.exceptions(cin.failbit);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while(T--) {
         solve();
     }

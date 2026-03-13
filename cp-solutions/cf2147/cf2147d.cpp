@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -90,45 +89,43 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 void solve() {
     int n;cin>>n;
     vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
+    map<int,ll>mp;
+    set<ll>st;
     rep(i,0,n){
         cin>>v[i];
         mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
+        st.insert(v[i]);
+    }
+    vi a;
+    for(auto it = st.begin(); it != st.end(); it++){
+        if(*it%2){
+            a.pb(mp[*it]);
+            mp[*it-1] += mp[*it];
+            st.insert(*it-1);
+            mp[*it] = 0;
+
         }
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
-            }
+    sort(rall(a));
+    ll ans1 = 0;
+    ll ans2 = 0;
+    rep(i,0,sz(a)){
+        if(i%2==0){
+            ans1 += a[i];
         }
-        cout<<"YES\n";
+        else{
+            ans2 += a[i];
+        }
     }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
-        }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
-    }
+    dbg(ans1); 
+    for(auto it = st.begin(); it != st.end(); it++){
+        ans1 += mp[*it] * (*it/2);
+        ans2 += mp[*it] * (*it/2);
+    } 
+
+    cout<<ans1<<" "<<ans2<<nl;
+
 }
- 
 int main() {
     cin.tie(0)->sync_with_stdio(0); 
     cin.exceptions(cin.failbit);

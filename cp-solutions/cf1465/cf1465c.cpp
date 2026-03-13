@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -86,47 +85,54 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 */
 
-
 void solve() {
-    int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
-    rep(i,0,n){
-        cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
+    int n,m;cin>>n>>m;
+    int vis[n+1]={0};
+    int go[n+1];
+    rep(i,1,n+1){
+        go[i] = -1;
+    }
+
+    int ans = 0;
+    int bad[n+1] = {0};
+    rep(i,0,m){
+        int x,y;
+        cin>>x>>y;
+        if(x != y){
+            go[x]=y;
+            ans++;
         }
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
+    rep(i,1,n+1){
+        if(!vis[i]){
+            int i1 = i;
+            int cyc = 0; 
+            vis[i] = 1;
+            while(true){
+                if(go[i1] == -1){
+                    break;
                 }
+                i1 = go[i1];
+                if(vis[i1]){
+                    if(bad[i1] == 1){
+                        break;
+                    }
+                    cyc = 1;
+                    break;
+                }
+                vis[i1]=1;
             }
+            if(cyc){
+                ans++;
+            }
+            else{
+                bad[i] = 1;
+            }
+            
         }
-        cout<<"YES\n";
     }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
-        }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
-    }
+    cout<<ans<<nl;
+
 }
  
 int main() {

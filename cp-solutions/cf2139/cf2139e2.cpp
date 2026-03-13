@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -86,47 +85,127 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 */
 
+int vis[200005];
+vi aj[200005];
+int d[200005];
+int dp[200005];
+void dfs(int n){
+    vis[n] = 1;
+    dp[n] = 1;
+    for(auto x : aj[n]){
+        if(!vis[x]){
+            d[x] = d[n]+1;
+            dfs(x);
+            dp[n] += dp[x];
+        }
+    }
+
+}
 
 void solve() {
-    int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
+    int n,k;cin>>n>>k;
+
     rep(i,0,n){
-        cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
-        }
+        vis[i] = 0;
+        aj[i].clear();
+        d[i] = 0;
+        dp[i] = 0;
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
+    rep(i,1,n){
+        int u;cin>>u;
+        u--;
+        aj[u].pb(i);
+        aj[i].pb(u);
+    }
+    dfs(0);
+    int val[n] = {0};
+    rep(i,0,n){
+        val[d[i]]++;
+    }
+
+
+    int ans = 0;
+    if(1){
+
+        int sum = 0;
+        int mn = 1e9;
+        rep(i,1,n){
+            if(sz(aj[i]) == 1){
+                ckmin(mn, d[i]);     
             }
         }
-        cout<<"YES\n";
-    }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
+
+
+
+        
+        int cnt = 0; 
+        rep(i,0,n){
+            if(d[i] == mn){
+                cnt += dp[i]-1;
+            }
         }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
+        vi v;
+        rep(i,0,cnt){
+            v.pb(1);
         }
-        cout<<"YES\n";
+        rep(i,0,mn){
+            v.pb(val[i]);
+        }
+    
+        // knapsack
+
+
+        mn++;
+        if(cnt >= x){
+            ckmax(ans, mn);
+        }
+        else{
+            ckmax(ans, mn-1);
+        }
     }
+
+
+    if(1){
+        k = n-k;
+        int sum = 0;
+        int mn = 1e9;
+        rep(i,1,n){
+            if(sz(aj[i]) == 1){
+                ckmin(mn, d[i]);     
+            }
+        }
+        
+
+        rep(i,0,mn){
+            if(sum + val[i] > k){
+                break;
+            }
+            sum += val[i];
+        }
+
+        int x = k-sum;
+        
+
+
+        int cnt = 0; 
+
+        rep(i,0,n){
+            if(d[i] == mn){
+                cnt += dp[i]-1;
+            }
+        }
+
+        mn++;
+        if(cnt >= x){
+            ckmax(ans, mn);
+        }
+        else{
+            ckmax(ans, mn-1);
+        }
+    }
+    
+    cout<<ans<<nl;
+
 }
  
 int main() {

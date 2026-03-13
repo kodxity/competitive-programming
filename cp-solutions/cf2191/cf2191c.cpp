@@ -49,7 +49,6 @@ const char nl = '\n';
 const int MX = 100001; 
 const ll INF = (1LL<<60);
 
-
 // DEBUG
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -89,44 +88,43 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 void solve() {
     int n;cin>>n;
-    vi v(n);
-    map<int,int>mp;
-    int a[2]={0};
+    string s;cin>>s;
+    int cnt[2]={0};
+    vector<char> v;
     rep(i,0,n){
-        cin>>v[i];
-        mp[v[i]]++;
-        if(v[i] < 0){
-            a[0]++;
-        }
-        else if(v[i] > 0){
-            a[1]++;
+        cnt[s[i]-'0']++;
+        v.pb(s[i]);
+    }
+    sort(all(v));
+    bool bad = 0;
+    rep(i,0,n){
+        if(v[i] != s[i]){
+            bad = 1;
         }
     }
-    if(n<=4){
-        rep(i,0,n){
-            rep(j,i+1,n){
-                rep(l,j+1,n){
-                    if(mp[v[i]+v[j]+v[l]] == 0){
-                        cout<<"NO\n";
-                        return;
-                    }
-                }
-            }
-        }
-        cout<<"YES\n";
+    if(!bad){
+        cout<<"Bob\n";
+        return;
     }
-    else{
-        if(a[0]>1 || a[1]>1){
-            cout<<"NO\n";
-            return;
+
+    vi ans;
+    repv(i,n-cnt[1],n){
+        if(s[i] == '0'){
+            ans.pb(i);
         }
-        sort(all(v));
-        if(mp[v[0]+v[n-1]] == 0){
-            cout<<"NO\n";
-            return;
-        }
-        cout<<"YES\n";
     }
+    repv(i,0,n-cnt[1]){
+        if(s[i] == '1'){
+            ans.pb(i);
+        }
+    }
+    reverse(all(ans));
+    cout<<"Alice\n";
+    cout<<sz(ans)<<nl;
+    rep(i,0,sz(ans)){
+        cout<<ans[i]+1<<" ";
+    }
+    cout<<nl;
 }
  
 int main() {
