@@ -101,5 +101,5 @@ int main() {
         solve();
     }
 
-	return 0;
+    return 0;
 }
